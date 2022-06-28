@@ -443,6 +443,45 @@ class DbCollection {
     return db.getLastError();
   }
 
+  Future<Map<String, dynamic>> dropIndex(
+      {String? key,
+        Map<String, dynamic>? keys,
+        bool? unique,
+        bool? sparse,
+        bool? background,
+        bool? dropDups,
+        Map<String, dynamic>? partialFilterExpression,
+        String? name,
+        bool? modernReply}) async {
+    if (!db.masterConnection.serverCapabilities.supportsOpMsg) {
+      throw MongoDartError('Use dropIndex() method on db (before 3.6)');
+    }
+
+    modernReply ??= true;
+    var indexOptions = DropIndexOptions(this,
+        uniqueIndex: unique == true,
+        sparseIndex: sparse == true,
+        background: background == true,
+        dropDuplicatedEntries: dropDups == true,
+        partialFilterExpression: partialFilterExpression,
+        indexName: name);
+
+    var indexOperation =
+    DropIndexOperation(db, this, {}, indexOptions);
+
+    var res = await indexOperation.execute();
+    if (res[keyOk] == 0.0) {
+      // It should be better to create a MongoDartError,
+      // but, for compatibility reasons, we throw the received map.
+      throw res;
+    }
+    if (modernReply) {
+      return res;
+    }
+    return db.getLastError();
+  }
+
+
   // This method has been made available since version 3.2
   // As we will use this with the new wire message available
   // since version 3.6, we will check this last version

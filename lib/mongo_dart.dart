@@ -35,6 +35,7 @@ import 'package:mongo_dart/src/database/utils/parms_utils.dart';
 import 'package:mongo_dart/src/database/utils/split_hosts.dart';
 import 'package:mongo_dart_query/mongo_dart_query.dart';
 import 'package:pool/pool.dart';
+import 'package:mongo_dart/src/database/commands/administration_commands/drop_index_operation/drop_index_operation.dart';
 
 export 'package:bson/bson.dart';
 export 'package:mongo_dart_query/mongo_aggregation.dart';
