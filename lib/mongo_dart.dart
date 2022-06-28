@@ -21,6 +21,7 @@ import 'dart:typed_data';
 import 'package:bson/bson.dart';
 import 'package:logging/logging.dart';
 import 'package:mongo_dart/src/auth/scram_sha256_authenticator.dart';
+import 'package:mongo_dart/src/database/commands/administration_commands/drop_index_operation/drop_index_operation.dart';
 import 'package:mongo_dart/src/database/cursor/modern_cursor.dart';
 import 'package:mongo_dart/src/database/info/server_status.dart';
 import 'package:mongo_dart/src/database/message/additional/section.dart';

@@ -56,12 +56,7 @@ class WriteConcern {
   final String? provenance;
 
   /// Creates a WriteConcern object
-  const WriteConcern(
-      {this.w,
-      this.wtimeout,
-      this.fsync = true,
-      this.j = true,
-      this.provenance});
+  const WriteConcern({this.w, this.wtimeout, this.fsync = true, this.j = true, this.provenance});
 
   WriteConcern.fromMap(Map<String, Object> writeConcernMap)
       : w = writeConcernMap[keyW],
@@ -73,14 +68,12 @@ class WriteConcern {
   /// No exceptions are raised, even for network issues.
   @Deprecated('No more used')
   // ignore: constant_identifier_names
-  static const ERRORS_IGNORED =
-      WriteConcern(w: -1, wtimeout: 0, fsync: false, j: false);
+  static const ERRORS_IGNORED = WriteConcern(w: -1, wtimeout: 0, fsync: false, j: false);
 
   /// Write operations that use this write concern will return as soon as the
   /// message is written to the socket.
   /// Exceptions are raised for network issues, but not server errors.
-  static const unacknowledged =
-      WriteConcern(w: 0, wtimeout: 0, fsync: false, j: false);
+  static const unacknowledged = WriteConcern(w: 0, wtimeout: 0, fsync: false, j: false);
 
   @Deprecated('Use unacknowledged instead')
   // ignore: constant_identifier_names
@@ -89,8 +82,7 @@ class WriteConcern {
   /// Write operations that use this write concern will wait for
   /// acknowledgement from the primary server before returning.
   /// Exceptions are raised for network issues, and server errors.
-  static const acknowledged =
-      WriteConcern(w: 1, wtimeout: 0, fsync: false, j: false);
+  static const acknowledged = WriteConcern(w: 1, wtimeout: 0, fsync: false, j: false);
 
   @Deprecated('Use acknowledged instead')
   // ignore: constant_identifier_names
@@ -98,8 +90,7 @@ class WriteConcern {
 
   /// Exceptions are raised for network issues, and server errors;
   /// waits for at least 2 servers for the write operation.
-  static const replicaAcknowledged =
-      WriteConcern(w: 2, wtimeout: 0, fsync: false, j: false);
+  static const replicaAcknowledged = WriteConcern(w: 2, wtimeout: 0, fsync: false, j: false);
 
   @Deprecated('Use replicaAcknowledged instead')
   // ignore: constant_identifier_names
@@ -115,8 +106,7 @@ class WriteConcern {
   /// Exceptions are raised for network issues, and server errors; the write
   /// operation waits for the server to
   /// group commit to the journal file on disk.
-  static const journaled =
-      WriteConcern(w: 1, wtimeout: 0, fsync: false, j: true);
+  static const journaled = WriteConcern(w: 1, wtimeout: 0, fsync: false, j: true);
 
   @Deprecated('Use journaled instead')
   // ignore: constant_identifier_names
@@ -124,8 +114,7 @@ class WriteConcern {
 
   /// Exceptions are raised for network issues, and server errors; waits on a
   /// majority of servers for the write operation.
-  static const majority =
-      WriteConcern(w: 'majority', wtimeout: 0, fsync: false, j: false);
+  static const majority = WriteConcern(w: 'majority', wtimeout: 0, fsync: false, j: false);
 
   @Deprecated('Use majority instead')
   // ignore: constant_identifier_names
@@ -271,29 +260,22 @@ class Db {
       var uriList = await decodeDnsSeedlist(Uri.parse(uriString));
       return Db.pool(uriList, _debugInfo);
     } else {
-      throw MongoDartError(
-          'The only valid schemas for Db are: "mongodb" and "mongodb+srv".');
+      throw MongoDartError('The only valid schemas for Db are: "mongodb" and "mongodb+srv".');
     }
   }
 
   WriteConcern? get writeConcern => _writeConcern;
 
   Connection get masterConnection => _masterConnectionVerified;
+
   Connection get masterConnectionAnyState => _masterConnectionVerifiedAnyState;
 
   List<String> get uriList => _uriList.toList();
 
-  Future<ServerConfig> _parseUri(String uriString,
-      {bool? isSecure,
-      bool? tlsAllowInvalidCertificates,
-      String? tlsCAFile,
-      String? tlsCertificateKeyFile,
-      String? tlsCertificateKeyFilePassword}) async {
+  Future<ServerConfig> _parseUri(String uriString, {bool? isSecure, bool? tlsAllowInvalidCertificates, String? tlsCAFile, String? tlsCertificateKeyFile, String? tlsCertificateKeyFilePassword}) async {
     isSecure ??= false;
     tlsAllowInvalidCertificates ??= false;
-    if (tlsAllowInvalidCertificates ||
-        tlsCAFile != null ||
-        tlsCertificateKeyFile != null) {
+    if (tlsAllowInvalidCertificates || tlsCAFile != null || tlsCertificateKeyFile != null) {
       isSecure = true;
     }
     var uri = Uri.parse(uriString);
@@ -311,13 +293,10 @@ class Db {
         authSourceDb = Db._authDb(value);
       }
 
-      if ((queryParam == _UriParameters.tls ||
-              queryParam == _UriParameters.ssl) &&
-          value == 'true') {
+      if ((queryParam == _UriParameters.tls || queryParam == _UriParameters.ssl) && value == 'true') {
         isSecure = true;
       }
-      if (queryParam == _UriParameters.tlsAllowInvalidCertificates &&
-          value == 'true') {
+      if (queryParam == _UriParameters.tlsAllowInvalidCertificates && value == 'true') {
         tlsAllowInvalidCertificates = true;
         isSecure = true;
       }
@@ -325,13 +304,11 @@ class Db {
         tlsCAFile = value;
         isSecure = true;
       }
-      if (queryParam == _UriParameters.tlsCertificateKeyFile &&
-          value.isNotEmpty) {
+      if (queryParam == _UriParameters.tlsCertificateKeyFile && value.isNotEmpty) {
         tlsCertificateKeyFile = value;
         isSecure = true;
       }
-      if (queryParam == _UriParameters.tlsCertificateKeyFilePassword &&
-          value.isNotEmpty) {
+      if (queryParam == _UriParameters.tlsCertificateKeyFilePassword && value.isNotEmpty) {
         tlsCertificateKeyFilePassword = value;
       }
     });
@@ -342,11 +319,9 @@ class Db {
     }
     Uint8List? tlsCertificateKeyFileContent;
     if (tlsCertificateKeyFile != null) {
-      tlsCertificateKeyFileContent =
-          await File(tlsCertificateKeyFile!).readAsBytes();
+      tlsCertificateKeyFileContent = await File(tlsCertificateKeyFile!).readAsBytes();
     }
-    if (tlsCertificateKeyFilePassword != null &&
-        tlsCertificateKeyFile == null) {
+    if (tlsCertificateKeyFilePassword != null && tlsCertificateKeyFile == null) {
       throw MongoDartError('Missing tlsCertificateKeyFile parameter');
     }
 
@@ -401,8 +376,7 @@ class Db {
     return DbCollection(this, collectionName);
   }
 
-  Future<MongoReplyMessage> queryMessage(MongoMessage queryMessage,
-      {Connection? connection}) {
+  Future<MongoReplyMessage> queryMessage(MongoMessage queryMessage, {Connection? connection}) {
     return Future.sync(() {
       if (state != State.open) {
         throw MongoDartError('Db is in the wrong state: $state');
@@ -414,8 +388,7 @@ class Db {
     });
   }
 
-  void executeMessage(MongoMessage message, WriteConcern? writeConcern,
-      {Connection? connection}) {
+  void executeMessage(MongoMessage message, WriteConcern? writeConcern, {Connection? connection}) {
     if (state != State.open) {
       throw MongoDartError('DB is not open. $state');
     }
@@ -428,8 +401,7 @@ class Db {
     connection.execute(message, writeConcern == WriteConcern.ERRORS_IGNORED);
   }
 
-  Future<Map<String, Object?>> executeModernMessage(MongoModernMessage message,
-      {Connection? connection, bool skipStateCheck = false}) async {
+  Future<Map<String, Object?>> executeModernMessage(MongoModernMessage message, {Connection? connection, bool skipStateCheck = false}) async {
     if (skipStateCheck) {
       if (!_masterConnectionVerifiedAnyState.serverCapabilities.supportsOpMsg) {
         throw MongoDartError('The "modern message" can only be executed '
@@ -449,8 +421,7 @@ class Db {
 
     var response = await connection.executeModernMessage(message);
 
-    var section = response.sections.firstWhere((Section _section) =>
-        _section.payloadType == MongoModernMessage.basePayloadType);
+    var section = response.sections.firstWhere((Section _section) => _section.payloadType == MongoModernMessage.basePayloadType);
     return section.payload.content;
   }
 
@@ -490,22 +461,16 @@ class Db {
   /// and at least the primary connection is connected
   ///
   /// Connections can disconect because of network or database server problems.
-  bool get isConnected =>
-      state == State.open && (_masterConnection?.connected ?? false);
+  bool get isConnected => state == State.open && (_masterConnection?.connected ?? false);
 
-  Future<Map<String, dynamic>> executeDbCommand(MongoMessage message,
-      {Connection? connection}) async {
+  Future<Map<String, dynamic>> executeDbCommand(MongoMessage message, {Connection? connection}) async {
     connection ??= _masterConnectionVerified;
 
     //var result = Completer<Map<String, dynamic>>();
 
     var replyMessage = await connection.query(message);
     if (replyMessage.documents == null || replyMessage.documents!.isEmpty) {
-      throw {
-        keyOk: 0.0,
-        keyErrmsg:
-            'Error executing Db command, documents are empty $replyMessage'
-      };
+      throw {keyOk: 0.0, keyErrmsg: 'Error executing Db command, documents are empty $replyMessage'};
     }
     var firstRepliedDocument = replyMessage.documents!.first;
     /*var errorMessage = '';
@@ -532,16 +497,13 @@ class Db {
     //return result.future;
   }
 
-  bool documentIsNotAnError(firstRepliedDocument) =>
-      firstRepliedDocument['ok'] == 1.0 && firstRepliedDocument['err'] == null;
+  bool documentIsNotAnError(firstRepliedDocument) => firstRepliedDocument['ok'] == 1.0 && firstRepliedDocument['err'] == null;
 
   Future<bool> dropCollection(String collectionName) async {
     var collectionInfos = await getCollectionInfos({'name': collectionName});
 
     if (collectionInfos.length == 1) {
-      return executeDbCommand(
-              DbCommand.createDropCollectionCommand(this, collectionName))
-          .then((_) => true);
+      return executeDbCommand(DbCommand.createDropCollectionCommand(this, collectionName)).then((_) => true);
     }
 
     return true;
@@ -552,40 +514,31 @@ class Db {
     return executeDbCommand(DbCommand.createDropDatabaseCommand(this));
   }
 
-  Future<Map<String, dynamic>> removeFromCollection(String collectionName,
-      [Map<String, dynamic> selector = const {}, WriteConcern? writeConcern]) {
+  Future<Map<String, dynamic>> removeFromCollection(String collectionName, [Map<String, dynamic> selector = const {}, WriteConcern? writeConcern]) {
     return Future.sync(() {
-      executeMessage(
-          MongoRemoveMessage('$databaseName.$collectionName', selector),
-          writeConcern);
+      executeMessage(MongoRemoveMessage('$databaseName.$collectionName', selector), writeConcern);
       return _getAcknowledgement(writeConcern: writeConcern);
     });
   }
 
-  Future<Map<String, dynamic>> getLastError(
-      [WriteConcern? writeConcern]) async {
+  Future<Map<String, dynamic>> getLastError([WriteConcern? writeConcern]) async {
     writeConcern ??= _writeConcern;
     if (masterConnection.serverCapabilities.supportsOpMsg) {
       return GetLastErrorCommand(this, writeConcern: writeConcern).execute();
     } else {
-      return executeDbCommand(
-          DbCommand.createGetLastErrorCommand(this, writeConcern));
+      return executeDbCommand(DbCommand.createGetLastErrorCommand(this, writeConcern));
     }
   }
 
   Future<Map<String, dynamic>> getNonce({Connection? connection}) {
-    return executeDbCommand(DbCommand.createGetNonceCommand(this),
-        connection: connection);
+    return executeDbCommand(DbCommand.createGetNonceCommand(this), connection: connection);
   }
 
   Future<Map<String, dynamic>> getBuildInfo({Connection? connection}) {
-    return executeDbCommand(DbCommand.createBuildInfoCommand(this),
-        connection: connection);
+    return executeDbCommand(DbCommand.createBuildInfoCommand(this), connection: connection);
   }
 
-  Future<Map<String, dynamic>> isMaster({Connection? connection}) =>
-      executeDbCommand(DbCommand.createIsMasterCommand(this),
-          connection: connection);
+  Future<Map<String, dynamic>> isMaster({Connection? connection}) => executeDbCommand(DbCommand.createIsMasterCommand(this), connection: connection);
 
   Future<Map<String, dynamic>> wait() => getLastError();
 
@@ -599,8 +552,7 @@ class Db {
 
   /// Analogue to shell's `show dbs`. Helper for `listDatabases` mongodb command.
   Future<List> listDatabases() async {
-    var commandResult = await executeDbCommand(
-        DbCommand.createQueryAdminCommand({'listDatabases': 1}));
+    var commandResult = await executeDbCommand(DbCommand.createQueryAdminCommand({'listDatabases': 1}));
 
     var result = [];
 
@@ -611,8 +563,7 @@ class Db {
     return result;
   }
 
-  Stream<Map<String, dynamic>> _listCollectionsCursor(
-      [Map<String, dynamic> filter = const {}]) {
+  Stream<Map<String, dynamic>> _listCollectionsCursor([Map<String, dynamic> filter = const {}]) {
     if (masterConnection.serverCapabilities.listCollections) {
       return ListCollectionsCursor(this, filter).stream;
     } else {
@@ -622,11 +573,7 @@ class Db {
       if (filter.containsKey('name')) {
         selector['name'] = "$databaseName.${filter['name']}";
       }
-      return Cursor(
-              this,
-              DbCollection(this, DbCommand.SYSTEM_NAMESPACE_COLLECTION),
-              selector)
-          .stream;
+      return Cursor(this, DbCollection(this, DbCommand.SYSTEM_NAMESPACE_COLLECTION), selector).stream;
     }
   }
 
@@ -634,21 +581,16 @@ class Db {
   /// with WiredTiger
   /// Use `getCollectionInfos` instead
   @Deprecated('Use `getCollectionInfos` instead')
-  Stream<Map<String, dynamic>> collectionsInfoCursor(
-          [String? collectionName]) =>
-      _collectionsInfoCursor(collectionName);
+  Stream<Map<String, dynamic>> collectionsInfoCursor([String? collectionName]) => _collectionsInfoCursor(collectionName);
 
-  Stream<Map<String, dynamic>> _collectionsInfoCursor(
-      [String? collectionName]) {
+  Stream<Map<String, dynamic>> _collectionsInfoCursor([String? collectionName]) {
     var selector = <String, dynamic>{};
     // If we are limiting the access to a specific collection name
     if (collectionName != null) {
       selector['name'] = '$databaseName.$collectionName';
     }
     // Return Cursor
-    return Cursor(this,
-            DbCollection(this, DbCommand.SYSTEM_NAMESPACE_COLLECTION), selector)
-        .stream;
+    return Cursor(this, DbCollection(this, DbCommand.SYSTEM_NAMESPACE_COLLECTION), selector).stream;
   }
 
   /// Analogue to shell's `show collections`
@@ -657,27 +599,18 @@ class Db {
   /// Use `getCollectionNames` instead
   @Deprecated('Use `getCollectionNames` instead')
   Future<List<String?>> listCollections() {
-    return _collectionsInfoCursor()
-        .map((map) => map['name']?.toString().split('.'))
-        .where((arr) => arr != null && arr.length == 2)
-        .map((arr) => arr?.last)
-        .toList();
+    return _collectionsInfoCursor().map((map) => map['name']?.toString().split('.')).where((arr) => arr != null && arr.length == 2).map((arr) => arr?.last).toList();
   }
 
-  Future<List<Map<String, dynamic>>> getCollectionInfos(
-      [Map<String, dynamic> filter = const {}]) {
+  Future<List<Map<String, dynamic>>> getCollectionInfos([Map<String, dynamic> filter = const {}]) {
     return _listCollectionsCursor(filter).toList();
   }
 
-  Future<List<String?>> getCollectionNames(
-      [Map<String, dynamic> filter = const {}]) {
-    return _listCollectionsCursor(filter)
-        .map((map) => map['name']?.toString())
-        .toList();
+  Future<List<String?>> getCollectionNames([Map<String, dynamic> filter = const {}]) {
+    return _listCollectionsCursor(filter).map((map) => map['name']?.toString()).toList();
   }
 
-  Future<bool> authenticate(String userName, String password,
-      {Connection? connection}) async {
+  Future<bool> authenticate(String userName, String password, {Connection? connection}) async {
     var credential = UsernamePasswordCredential()
       ..username = userName
       ..password = password;
@@ -688,8 +621,7 @@ class Db {
     if (_authenticationScheme == null) {
       throw MongoDartError('Authentication scheme not specified');
     }
-    var authenticator =
-        Authenticator.create(_authenticationScheme!, this, credential);
+    var authenticator = Authenticator.create(_authenticationScheme!, this, credential);
 
     await authenticator.authenticate(connection ?? masterConnection);
 
@@ -708,10 +640,7 @@ class Db {
       selector['ns'] = '$databaseName.$collectionName';
     }
 
-    return Cursor(this, DbCollection(this, DbCommand.SYSTEM_INDEX_COLLECTION),
-            selector)
-        .stream
-        .toList();
+    return Cursor(this, DbCollection(this, DbCommand.SYSTEM_INDEX_COLLECTION), selector).stream.toList();
   }
 
   String _createIndexName(Map<String, dynamic> keys) {
@@ -729,25 +658,46 @@ class Db {
   }
 
   Future<Map<String, dynamic>> createIndex(String collectionName,
-      {String? key,
-      Map<String, dynamic>? keys,
-      bool? unique,
-      bool? sparse,
-      bool? background,
-      bool? dropDups,
-      Map<String, dynamic>? partialFilterExpression,
-      String? name}) {
+      {String? key, Map<String, dynamic>? keys, bool? unique, bool? sparse, bool? background, bool? dropDups, Map<String, dynamic>? partialFilterExpression, String? name}) {
     if (masterConnection.serverCapabilities.supportsOpMsg) {
       return collection(collectionName).createIndex(
-          key: key,
-          keys: keys,
-          unique: unique,
-          sparse: sparse,
-          background: background,
-          dropDups: dropDups,
-          partialFilterExpression: partialFilterExpression,
-          name: name,
-          modernReply: false);
+          key: key, keys: keys, unique: unique, sparse: sparse, background: background, dropDups: dropDups, partialFilterExpression: partialFilterExpression, name: name, modernReply: false);
+    }
+    return Future.sync(() async {
+      var selector = <String, dynamic>{};
+      selector['ns'] = '$databaseName.$collectionName';
+      keys = _setKeys(key, keys);
+      selector['key'] = keys;
+
+      if (unique == true) {
+        selector['unique'] = true;
+      } else {
+        selector['unique'] = false;
+      }
+      if (sparse == true) {
+        selector['sparse'] = true;
+      }
+      if (background == true) {
+        selector['background'] = true;
+      }
+      if (dropDups == true) {
+        selector['dropDups'] = true;
+      }
+      if (partialFilterExpression != null) {
+        selector['partialFilterExpression'] = partialFilterExpression;
+      }
+      selector['name'] = name;
+      var insertMessage = MongoInsertMessage('$databaseName.${DbCommand.SYSTEM_INDEX_COLLECTION}', [selector]);
+      executeMessage(insertMessage, _writeConcern);
+      return getLastError();
+    });
+  }
+
+  Future<Map<String, dynamic>> dropIndex(String collectionName,
+      {String? key, Map<String, dynamic>? keys, bool? unique, bool? sparse, bool? background, bool? dropDups, Map<String, dynamic>? partialFilterExpression, String? name}) {
+    if (masterConnection.serverCapabilities.supportsOpMsg) {
+      return collection(collectionName).createIndex(
+          key: key, keys: keys, unique: unique, sparse: sparse, background: background, dropDups: dropDups, partialFilterExpression: partialFilterExpression, name: name, modernReply: false);
     }
     return Future.sync(() async {
       var selector = <String, dynamic>{};
@@ -774,8 +724,7 @@ class Db {
       }
       name ??= _createIndexName(keys!);
       selector['name'] = name;
-      var insertMessage = MongoInsertMessage(
-          '$databaseName.${DbCommand.SYSTEM_INDEX_COLLECTION}', [selector]);
+      var insertMessage = MongoRemoveMessage('$databaseName.${DbCommand.SYSTEM_INDEX_COLLECTION}', selector);
       executeMessage(insertMessage, _writeConcern);
       return getLastError();
     });
@@ -799,14 +748,7 @@ class Db {
   }
 
   Future ensureIndex(String collectionName,
-      {String? key,
-      Map<String, dynamic>? keys,
-      bool? unique,
-      bool? sparse,
-      bool? background,
-      bool? dropDups,
-      Map<String, dynamic>? partialFilterExpression,
-      String? name}) async {
+      {String? key, Map<String, dynamic>? keys, bool? unique, bool? sparse, bool? background, bool? dropDups, Map<String, dynamic>? partialFilterExpression, String? name}) async {
     keys = _setKeys(key, keys);
     var indexInfos = await collection(collectionName).getIndexes();
 
@@ -819,20 +761,13 @@ class Db {
       return {'ok': 1.0, 'result': 'index preexists'};
     }
 
-    var createdIndex = await createIndex(collectionName,
-        keys: keys,
-        unique: unique,
-        sparse: sparse,
-        background: background,
-        dropDups: dropDups,
-        partialFilterExpression: partialFilterExpression,
-        name: name);
+    var createdIndex =
+        await createIndex(collectionName, keys: keys, unique: unique, sparse: sparse, background: background, dropDups: dropDups, partialFilterExpression: partialFilterExpression, name: name);
 
     return createdIndex;
   }
 
-  Future<Map<String, dynamic>> _getAcknowledgement(
-      {WriteConcern? writeConcern}) {
+  Future<Map<String, dynamic>> _getAcknowledgement({WriteConcern? writeConcern}) {
     writeConcern ??= _writeConcern;
 
     // ignore: deprecated_member_use_from_same_package
@@ -851,33 +786,23 @@ class Db {
   /// connection.
   ///
   /// Only works from version 3.6
-  Future<Map<String, Object?>> serverStatus(
-      {Map<String, Object>? options}) async {
+  Future<Map<String, Object?>> serverStatus({Map<String, Object>? options}) async {
     if (!masterConnection.serverCapabilities.supportsOpMsg) {
       return <String, Object>{};
     }
-    var operation = ServerStatusCommand(this,
-        serverStatusOptions: ServerStatusOptions.instance);
+    var operation = ServerStatusCommand(this, serverStatusOptions: ServerStatusOptions.instance);
     return operation.execute();
   }
 
   /// This method explicitly creates a collection
-  Future<Map<String, Object?>> createCollection(String name,
-      {CreateCollectionOptions? createCollectionOptions,
-      Map<String, Object>? rawOptions}) async {
-    var command = CreateCollectionCommand(this, name,
-        createCollectionOptions: createCollectionOptions,
-        rawOptions: rawOptions);
+  Future<Map<String, Object?>> createCollection(String name, {CreateCollectionOptions? createCollectionOptions, Map<String, Object>? rawOptions}) async {
+    var command = CreateCollectionCommand(this, name, createCollectionOptions: createCollectionOptions, rawOptions: rawOptions);
     return command.execute();
   }
 
   /// This method creates a view
-  Future<Map<String, Object?>> createView(
-      String view, String source, List pipeline,
-      {CreateViewOptions? createViewOptions,
-      Map<String, Object>? rawOptions}) async {
-    var command = CreateViewCommand(this, view, source, pipeline,
-        createViewOptions: createViewOptions, rawOptions: rawOptions);
+  Future<Map<String, Object?>> createView(String view, String source, List pipeline, {CreateViewOptions? createViewOptions, Map<String, Object>? rawOptions}) async {
+    var command = CreateViewCommand(this, view, source, pipeline, createViewOptions: createViewOptions, rawOptions: rawOptions);
     return command.execute();
   }
 
@@ -885,24 +810,12 @@ class Db {
   /// underlying collection. For aggregations on collection data,
   /// see `dbcollection.modernAggregate()`.
   Stream<Map<String, dynamic>> aggregate(List<Map<String, Object>> pipeline,
-      {bool? explain,
-      Map<String, Object>? cursor,
-      String? hint,
-      Map<String, Object>? hintDocument,
-      AggregateOptions? aggregateOptions,
-      Map<String, Object>? rawOptions}) {
+      {bool? explain, Map<String, Object>? cursor, String? hint, Map<String, Object>? hintDocument, AggregateOptions? aggregateOptions, Map<String, Object>? rawOptions}) {
     if (!masterConnection.serverCapabilities.supportsOpMsg) {
       throw MongoDartError('At least MongoDb version 3.6 is required '
           'to run the aggregate operation');
     }
-    return ModernCursor(AggregateOperation(pipeline,
-            db: this,
-            explain: explain,
-            cursor: cursor,
-            hint: hint,
-            hintDocument: hintDocument,
-            aggregateOptions: aggregateOptions,
-            rawOptions: rawOptions))
+    return ModernCursor(AggregateOperation(pipeline, db: this, explain: explain, cursor: cursor, hint: hint, hintDocument: hintDocument, aggregateOptions: aggregateOptions, rawOptions: rawOptions))
         .stream;
   }
 }

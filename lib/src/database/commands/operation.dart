@@ -54,5 +54,6 @@ export 'administration_commands/create_index_operation/create_index_operation.da
 export 'query_and_write_operation_commands/wrapper/insert_one/insert_one_operation.dart';
 export 'query_and_write_operation_commands/wrapper/insert_many/insert_many_operation.dart';
 export 'administration_commands/create_index_operation/create_index_options.dart';
+export 'administration_commands/drop_index_operation/drop_index_options.dart';
 export 'query_and_write_operation_commands/wrapper/insert_one/insert_one_options.dart';
 export 'query_and_write_operation_commands/find_operation/find_options.dart';
