@@ -29,6 +29,7 @@ import 'package:mongo_dart/src/database/message/mongo_response_message.dart';
 import 'package:mongo_dart/src/database/commands/aggreagation_commands/distinct/distinct_operation.dart';
 import 'package:mongo_dart/src/database/commands/aggreagation_commands/distinct/distinct_options.dart';
 import 'package:mongo_dart/src/database/commands/aggreagation_commands/distinct/distinct_result.dart';
+import 'package:mongo_dart/src/database/commands/administration_commands/drop_index_operation/drop_index_operation.dart';
 import 'package:mongo_dart/src/database/commands/query_and_write_operation_commands/update_operation/update_operation.dart';
 import 'package:mongo_dart/src/database/commands/query_and_write_operation_commands/update_operation/update_options.dart';
 import 'package:mongo_dart/src/database/commands/query_and_write_operation_commands/update_operation/update_statement.dart';

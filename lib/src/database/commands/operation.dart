@@ -51,6 +51,7 @@ export 'replication_commands/hello_command/hello_result.dart';
 export 'parameters/collation_options.dart';
 export 'parameters/read_preference.dart';
 export 'administration_commands/create_index_operation/create_index_operation.dart';
+export 'administration_commands/drop_index_operation/drop_index_options.dart';
 export 'query_and_write_operation_commands/wrapper/insert_one/insert_one_operation.dart';
 export 'query_and_write_operation_commands/wrapper/insert_many/insert_many_operation.dart';
 export 'administration_commands/create_index_operation/create_index_options.dart';
